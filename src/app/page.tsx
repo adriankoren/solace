@@ -11,9 +11,11 @@ export default function Home() {
   useEffect(() => {
     console.log("fetching advocates...");
     fetch("/api/advocates").then((response) => {
-      AdvocateArraySchema.parseAsync(response).then((advocates) => {
-        setAdvocates(advocates);
-        setFilteredAdvocates(advocates);
+      response.json().then((json) => {
+        AdvocateArraySchema.parseAsync(json).then((advocates) => {
+          setAdvocates(advocates.data ?? []);
+          setFilteredAdvocates(advocates.data ?? []);
+        });
       });
     });
   }, []);
