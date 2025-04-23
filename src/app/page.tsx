@@ -1,18 +1,19 @@
 "use client";
 
 import AdvocateHeader from "@/components/advocate-header";
+import { Advocate, AdvocateArraySchema, AdvocateSchema } from "@/utils/types";
 import { useEffect, useState } from "react";
 
 export default function Home() {
-  const [advocates, setAdvocates] = useState([]);
-  const [filteredAdvocates, setFilteredAdvocates] = useState([]);
+  const [advocates, setAdvocates] = useState<Advocate[]>([]);
+  const [filteredAdvocates, setFilteredAdvocates] = useState<Advocate[]>([]);
 
   useEffect(() => {
     console.log("fetching advocates...");
     fetch("/api/advocates").then((response) => {
-      response.json().then((jsonResponse) => {
-        setAdvocates(jsonResponse.data);
-        setFilteredAdvocates(jsonResponse.data);
+      AdvocateArraySchema.parseAsync(response).then((advocates) => {
+        setAdvocates(advocates);
+        setFilteredAdvocates(advocates);
       });
     });
   }, []);
@@ -29,8 +30,7 @@ export default function Home() {
         advocate.lastName.includes(searchTerm) ||
         advocate.city.includes(searchTerm) ||
         advocate.degree.includes(searchTerm) ||
-        advocate.specialties.includes(searchTerm) ||
-        advocate.yearsOfExperience.includes(searchTerm)
+        advocate.specialties.includes(searchTerm)
       );
     });
 
