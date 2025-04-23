@@ -61,7 +61,7 @@ export default function Home() {
       </div>
       <br />
       <br />
-      <table>
+      <table width="100%">
         <AdvocateHeader />
         <tbody>
           {advocates.map((advocate) => {            
