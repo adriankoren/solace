@@ -7,7 +7,7 @@ import { useCallback, useEffect, useRef, useState } from "react";
 export default function Home() {
   const [advocates, setAdvocates] = useState<Advocate[]>([]);
   const [filteredAdvocates, setFilteredAdvocates] = useState<Advocate[]>([]);
-  const searchRef = useRef<HTMLInputElement | null>(null)
+  const searchRef = useRef<HTMLInputElement | null>(null); // we may no longer need this
   const searchTimer = useRef<NodeJS.Timeout| undefined>(undefined);
 
   // this is the text currently in the text field
@@ -28,7 +28,10 @@ export default function Home() {
   }, []);
 
   useEffect(() => {
-    console.log('researching');
+    if (effectiveSearchText.length === 0) {
+      setFilteredAdvocates(advocates);
+      return;
+    }
     const filteredAdvocates = advocates.filter((advocate) => {
       return (
         advocate.firstName.includes(effectiveSearchText) ||
@@ -49,23 +52,18 @@ export default function Home() {
 
   const onChange = useCallback((e) => {
     const searchTerm = e.target.value;
-
-    if (searchRef.current) {
-      searchRef.current.innerHTML = searchTerm;
-    }
-
     setCurrentSearchText(searchTerm);
     clearTimeout(searchTimer.current);
     // perform search with debounce.
     searchTimer.current = setTimeout(performSearch, 500);
-    setEffectiveSearchText(searchTerm);
 
-  }, [setCurrentSearchText]);
+  }, [setCurrentSearchText, performSearch]);
 
-  const onClick = () => {
+  const onClick = useCallback(() => {
     console.log(advocates);
-    setFilteredAdvocates(advocates);
-  };
+    setEffectiveSearchText("");
+    setCurrentSearchText("");
+  }, [setEffectiveSearchText, setCurrentSearchText]);
 
   return (
     <main style={{ margin: "24px" }}>
@@ -77,7 +75,7 @@ export default function Home() {
         <p>
           Searching for: <span id="search-term"></span>
         </p>
-        <input ref={searchRef} style={{ border: "1px solid black" }} onChange={onChange} />
+        <input ref={searchRef} style={{ border: "1px solid black" }} onChange={onChange} value={currentSearchText} />
         <button onClick={onClick}>Reset Search</button>
       </div>
       <br />
