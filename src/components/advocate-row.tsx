@@ -13,7 +13,7 @@ function AdvocateRow({advocate} : AdvocateRowProps ) {
 
   return (
     <>
-      <tr>
+      <tr >
         <td>{advocate.firstName}</td>
         <td>{advocate.lastName}</td>
         <td>{advocate.city}</td>
@@ -22,8 +22,8 @@ function AdvocateRow({advocate} : AdvocateRowProps ) {
         <td>{advocate.yearsOfExperience}</td>
         <td>{advocate.phoneNumber}</td>
         <td>
-          <button className="bold ml-1" onClick={toggleSpecialties}>
-            {showSpecialties ? "^" : "v"}
+          <button className="bold text-2xl ml-1" onClick={toggleSpecialties}>
+            {showSpecialties ? "⇈" : "⇊"}
           </button>
         </td>
       </tr>
