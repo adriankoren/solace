@@ -2,11 +2,12 @@
 
 import AdvocateHeader from "@/components/advocate-header";
 import { Advocate, AdvocateArraySchema, AdvocateSchema } from "@/utils/types";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 
 export default function Home() {
   const [advocates, setAdvocates] = useState<Advocate[]>([]);
   const [filteredAdvocates, setFilteredAdvocates] = useState<Advocate[]>([]);
+  const searchRef = useRef<HTMLInputElement | null>(null)
 
   useEffect(() => {
     console.log("fetching advocates...");
@@ -23,7 +24,9 @@ export default function Home() {
   const onChange = (e) => {
     const searchTerm = e.target.value;
 
-    document.getElementById("search-term").innerHTML = searchTerm;
+    if (searchRef.current) {
+      searchRef.current.innerHTML = searchTerm;
+    }
 
     console.log("filtering advocates...");
     const filteredAdvocates = advocates.filter((advocate) => {
@@ -54,7 +57,7 @@ export default function Home() {
         <p>
           Searching for: <span id="search-term"></span>
         </p>
-        <input style={{ border: "1px solid black" }} onChange={onChange} />
+        <input ref={searchRef} style={{ border: "1px solid black" }} onChange={onChange} />
         <button onClick={onClick}>Reset Search</button>
       </div>
       <br />
