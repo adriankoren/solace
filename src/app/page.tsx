@@ -6,7 +6,6 @@ import { useCallback, useEffect, useRef, useState } from "react";
 
 export default function Home() {
   const [advocates, setAdvocates] = useState<Advocate[]>([]);
-  const [filteredAdvocates, setFilteredAdvocates] = useState<Advocate[]>([]);
   const searchRef = useRef<HTMLInputElement | null>(null); // we may no longer need this
   const searchTimer = useRef<NodeJS.Timeout| undefined>(undefined);
 
@@ -17,33 +16,14 @@ export default function Home() {
 
   useEffect(() => {
     console.log("fetching advocates...");
-    fetch("/api/advocates").then((response) => {
+    const url = "/api/advocates?search=" + encodeURIComponent(effectiveSearchText);
+    fetch(url).then((response) => {
       response.json().then((json) => {
         AdvocateArraySchema.parseAsync(json).then((advocates) => {
           setAdvocates(advocates.data ?? []);
-          setFilteredAdvocates(advocates.data ?? []);
         });
       });
     });
-  }, []);
-
-  useEffect(() => {
-    if (effectiveSearchText.length === 0) {
-      setFilteredAdvocates(advocates);
-      return;
-    }
-    const filteredAdvocates = advocates.filter((advocate) => {
-      return (
-        advocate.firstName.includes(effectiveSearchText) ||
-        advocate.lastName.includes(effectiveSearchText) ||
-        advocate.city.includes(effectiveSearchText) ||
-        advocate.degree.includes(effectiveSearchText) ||
-        advocate.specialties.includes(effectiveSearchText)
-      );
-    });
-
-    setFilteredAdvocates(filteredAdvocates);
-
   }, [effectiveSearchText]);
 
   const performSearch = useCallback(() => {
@@ -83,7 +63,7 @@ export default function Home() {
       <table>
         <AdvocateHeader />
         <tbody>
-          {filteredAdvocates.map((advocate) => {
+          {advocates.map((advocate) => {
             return (
               <tr>
                 <td>{advocate.firstName}</td>
