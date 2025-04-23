@@ -1,6 +1,7 @@
 "use client";
 
 import AdvocateHeader from "@/components/advocate-header";
+import AdvocateRow from "@/components/advocate-row";
 import { Advocate, AdvocateArraySchema, AdvocateSchema } from "@/utils/types";
 import { useCallback, useEffect, useRef, useState } from "react";
 
@@ -60,25 +61,11 @@ export default function Home() {
       </div>
       <br />
       <br />
-      <table>
+      <table width="100%">
         <AdvocateHeader />
         <tbody>
-          {advocates.map((advocate) => {
-            return (
-              <tr>
-                <td>{advocate.firstName}</td>
-                <td>{advocate.lastName}</td>
-                <td>{advocate.city}</td>
-                <td>{advocate.degree}</td>
-                <td>
-                  {advocate.specialties.map((s) => (
-                    <div>{s}</div>
-                  ))}
-                </td>
-                <td>{advocate.yearsOfExperience}</td>
-                <td>{advocate.phoneNumber}</td>
-              </tr>
-            );
+          {advocates.map((advocate) => {            
+            return <AdvocateRow advocate={advocate} key={advocate.id} />
           })}
         </tbody>
       </table>
