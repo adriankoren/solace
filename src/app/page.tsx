@@ -52,12 +52,9 @@ export default function Home() {
       <br />
       <br />
       <div>
-        <p>Search</p>
-        <p>
-          Searching for: <span id="search-term"></span>
-        </p>
-        <input ref={searchRef} style={{ border: "1px solid black" }} onChange={onChange} value={currentSearchText} />
-        <button onClick={onClick}>Reset Search</button>
+        <h2>Search</h2>
+        <input ref={searchRef} className="border border-solid border-black mr-1" onChange={onChange} value={currentSearchText} />
+        <button className="border border-solid border-red-700 rounded pl-1 pr-1 hover:bg-red-300" onClick={onClick}>Reset Search</button>
       </div>
       <br />
       <br />
