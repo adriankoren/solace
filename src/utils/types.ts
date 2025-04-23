@@ -7,10 +7,12 @@ export const AdvocateSchema = z.object({
   degree: z.string(),
   specialties: z.array(z.string()),
   yearsOfExperience: z.number(),
-  phoneNumber: z.string(),
+  phoneNumber: z.number(),
 });
 
-export const AdvocateArraySchema = z.array(AdvocateSchema);
+export const AdvocateArraySchema = z.object({
+  data: z.array(AdvocateSchema)
+});
 
 export type Advocate = z.infer<typeof AdvocateSchema>;
 export type AdvocateArray = z.infer<typeof AdvocateArraySchema>;
