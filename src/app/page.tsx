@@ -8,6 +8,7 @@ export default function Home() {
   const [advocates, setAdvocates] = useState<Advocate[]>([]);
   const [filteredAdvocates, setFilteredAdvocates] = useState<Advocate[]>([]);
   const searchRef = useRef<HTMLInputElement | null>(null)
+  const searchTimer = useRef<NodeJS.Timeout| undefined>(undefined);
 
   // this is the text currently in the text field
   const [currentSearchText, setCurrentSearchText] = useState("");
@@ -42,6 +43,10 @@ export default function Home() {
 
   }, [effectiveSearchText]);
 
+  const performSearch = useCallback(() => {
+    setEffectiveSearchText(currentSearchText);
+  }, [currentSearchText, setEffectiveSearchText]);
+
   const onChange = useCallback((e) => {
     const searchTerm = e.target.value;
 
@@ -50,9 +55,12 @@ export default function Home() {
     }
 
     setCurrentSearchText(searchTerm);
+    clearTimeout(searchTimer.current);
+    // perform search with debounce.
+    searchTimer.current = setTimeout(performSearch, 500);
     setEffectiveSearchText(searchTerm);
 
-  }, [currentSearchText]);
+  }, [setCurrentSearchText]);
 
   const onClick = () => {
     console.log(advocates);
