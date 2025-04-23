@@ -1,5 +1,6 @@
 "use client";
 
+import AdvocateHeader from "@/components/advocate-header";
 import { useEffect, useState } from "react";
 
 export default function Home() {
@@ -57,15 +58,7 @@ export default function Home() {
       <br />
       <br />
       <table>
-        <thead>
-          <th>First Name</th>
-          <th>Last Name</th>
-          <th>City</th>
-          <th>Degree</th>
-          <th>Specialties</th>
-          <th>Years of Experience</th>
-          <th>Phone Number</th>
-        </thead>
+        <AdvocateHeader />
         <tbody>
           {filteredAdvocates.map((advocate) => {
             return (
