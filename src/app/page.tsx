@@ -2,12 +2,17 @@
 
 import AdvocateHeader from "@/components/advocate-header";
 import { Advocate, AdvocateArraySchema, AdvocateSchema } from "@/utils/types";
-import { useEffect, useRef, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 
 export default function Home() {
   const [advocates, setAdvocates] = useState<Advocate[]>([]);
   const [filteredAdvocates, setFilteredAdvocates] = useState<Advocate[]>([]);
   const searchRef = useRef<HTMLInputElement | null>(null)
+
+  // this is the text currently in the text field
+  const [currentSearchText, setCurrentSearchText] = useState("");
+  // this is the text by which we are currently filtering
+  const [effectiveSearchText, setEffectiveSearchText] = useState("");
 
   useEffect(() => {
     console.log("fetching advocates...");
@@ -21,26 +26,33 @@ export default function Home() {
     });
   }, []);
 
-  const onChange = (e) => {
+  useEffect(() => {
+    console.log('researching');
+    const filteredAdvocates = advocates.filter((advocate) => {
+      return (
+        advocate.firstName.includes(effectiveSearchText) ||
+        advocate.lastName.includes(effectiveSearchText) ||
+        advocate.city.includes(effectiveSearchText) ||
+        advocate.degree.includes(effectiveSearchText) ||
+        advocate.specialties.includes(effectiveSearchText)
+      );
+    });
+
+    setFilteredAdvocates(filteredAdvocates);
+
+  }, [effectiveSearchText]);
+
+  const onChange = useCallback((e) => {
     const searchTerm = e.target.value;
 
     if (searchRef.current) {
       searchRef.current.innerHTML = searchTerm;
     }
 
-    console.log("filtering advocates...");
-    const filteredAdvocates = advocates.filter((advocate) => {
-      return (
-        advocate.firstName.includes(searchTerm) ||
-        advocate.lastName.includes(searchTerm) ||
-        advocate.city.includes(searchTerm) ||
-        advocate.degree.includes(searchTerm) ||
-        advocate.specialties.includes(searchTerm)
-      );
-    });
+    setCurrentSearchText(searchTerm);
+    setEffectiveSearchText(searchTerm);
 
-    setFilteredAdvocates(filteredAdvocates);
-  };
+  }, [currentSearchText]);
 
   const onClick = () => {
     console.log(advocates);
